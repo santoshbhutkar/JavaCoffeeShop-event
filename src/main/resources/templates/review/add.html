@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+  <head lang="en">
+    <title>Add Review - CoffeeShop</title>
+    <!--/*/ <th:block th:include="fragments/head :: head"></th:block> /*/-->
+  </head>
+  <body>
+    <div class="container">
+      <!--/*/ <th:block th:include="fragments/header :: header"></th:block> /*/-->
+      
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h2>Write a Review for <span th:text="${product.productName}"></span></h2>
+        </div>
+        
+        <form th:action="@{/reviews/add/{id}(id=${product.id})}" 
+              method="post" 
+              th:object="${review}">
+          <input type="hidden" th:field="*{product.id}" />
+          
+          <div class="panel-body">
+            <div class="col-lg-12 form-group" th:classappend="${#fields.hasErrors('rating')} ? 'has-error'">
+              <label class="col-lg-2 control-label" for="rating">Rating *</label>
+              <div class="col-lg-4">
+                <select id="rating" class="form-control" th:field="*{rating}" required>
+                  <option value="">Select Rating</option>
+                  <option value="1">1 Star - Poor</option>
+                  <option value="2">2 Stars - Fair</option>
+                  <option value="3">3 Stars - Good</option>
+                  <option value="4">4 Stars - Very Good</option>
+                  <option value="5">5 Stars - Excellent</option>
+                </select>
+                <small class="help-block"
+                       th:if="${#fields.hasErrors('rating')}"
+                       th:errors="*{rating}"></small>
+              </div>
+            </div>
+            
+            <div class="col-lg-12 form-group" th:classappend="${#fields.hasErrors('comment')} ? 'has-error'">
+              <label class="col-lg-2 control-label" for="comment">Comment</label>
+              <div class="col-lg-6">
+                <textarea id="comment" 
+                          class="form-control" 
+                          th:field="*{comment}" 
+                          rows="5" 
+                          placeholder="Share your thoughts about this product..."
+                          maxlength="1000"></textarea>
+                <small class="help-block">
+                  <span id="charCount">0</span> / 1000 characters
+                </small>
+                <small class="help-block"
+                       th:if="${#fields.hasErrors('comment')}"
+                       th:errors="*{comment}"></small>
+              </div>
+            </div>
+            
+            <div class="col-lg-12 form-group">
+              <label class="col-lg-2"></label>
+              <div class="col-lg-6">
+                <button type="submit" class="btn btn-primary">Submit Review</button>
+                <a th:href="@{/reviews/product/{id}(id=${product.id})}" class="btn btn-default">Cancel</a>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    
+    <script>
+      // Character counter for comment field
+      document.addEventListener('DOMContentLoaded', function() {
+        var commentField = document.getElementById('comment');
+        var charCount = document.getElementById('charCount');
+        
+        if (commentField && charCount) {
+          commentField.addEventListener('input', function() {
+            charCount.textContent = this.value.length;
+          });
+          // Initialize count
+          charCount.textContent = commentField.value.length;
+        }
+      });
+    </script>
+  </body>
+</html>
+
