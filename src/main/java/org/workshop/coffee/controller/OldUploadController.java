@@ -17,9 +17,12 @@ public class OldUploadController {
 
 
         public String uploadImage(Model model, MultipartFile file, Principal principal) throws IOException {
-        var name = file.getOriginalFilename().replace(" ", "_");
-        var fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, name);
-        Files.write(fileNameAndPath, file.getBytes());
+            var name = Paths.get(file.getOriginalFilename()).getFileName().toString().replace(" ", "_");
+            var fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, name);
+            Files.write(fileNameAndPath, file.getBytes());
+
+
+
             model.addAttribute("msg", "Uploaded images: " + name);
 
         if (principal == null) {
